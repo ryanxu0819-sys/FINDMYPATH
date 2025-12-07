@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { User, Language, SavedIdea } from '../types';
 import { authService } from '../services/authService';

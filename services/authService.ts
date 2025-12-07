@@ -1,4 +1,3 @@
-
 import { User, BusinessIdea, SavedIdea } from '../types';
 
 const USER_KEY = 'venturepath_user';

@@ -1,4 +1,3 @@
-
 export interface UserProfile {
   // Demographics & Mental State
   gender: string;

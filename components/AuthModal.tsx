@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { X, Mail, Lock, ArrowRight, Briefcase } from 'lucide-react';
 import { authService } from '../services/authService';

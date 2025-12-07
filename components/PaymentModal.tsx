@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { X, CreditCard, Lock, CheckCircle2, Loader2, Crown } from 'lucide-react';
 import { translations } from '../utils/translations';

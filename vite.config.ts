@@ -8,7 +8,6 @@ export default defineConfig(({ mode }) => {
     plugins: [react()],
     define: {
       // Safely expose the API_KEY from Vercel environment to the client-side code
-      // Note: This matches the existing code usage of process.env.API_KEY
       'process.env.API_KEY': JSON.stringify(env.API_KEY),
     },
   };

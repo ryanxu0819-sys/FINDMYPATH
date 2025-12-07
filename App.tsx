@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { AppState, UserProfile, BusinessIdea, User, Language, SavedIdea } from './types';
 import WizardForm from './components/WizardForm';

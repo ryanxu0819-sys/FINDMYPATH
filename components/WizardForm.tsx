@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { UserProfile, Language } from '../types';
 import { ArrowRight, DollarSign, Brain, Heart, Home, Activity, Smile, Briefcase, Target } from 'lucide-react';

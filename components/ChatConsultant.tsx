@@ -1,4 +1,3 @@
-
 import React, { useState, useRef, useEffect } from 'react';
 import { Send, X, Bot, Crown, Loader2, Sparkles } from 'lucide-react';
 import { ChatMessage, BusinessIdea, UserProfile, Language } from '../types';

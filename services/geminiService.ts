@@ -1,4 +1,3 @@
-
 import { GoogleGenAI, Type, Schema } from "@google/genai";
 import { UserProfile, BusinessIdea, ChatMessage, Language } from "../types";
 

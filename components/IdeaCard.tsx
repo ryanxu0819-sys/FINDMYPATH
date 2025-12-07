@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { BusinessIdea, Language } from '../types';
 import { TrendingUp, Wallet, ArrowRight } from 'lucide-react';
