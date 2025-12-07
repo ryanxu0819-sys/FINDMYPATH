@@ -1,7 +1,16 @@
 import { GoogleGenAI, Type, Schema } from "@google/genai";
 import { UserProfile, BusinessIdea, ChatMessage, Language } from "../types";
 
-const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+// Helper to get AI client safely. 
+// This prevents the app from crashing on load if the key is missing.
+const getAiClient = () => {
+  const apiKey = process.env.API_KEY;
+  if (!apiKey) {
+    console.error("API Key is missing. Please set VITE_API_KEY or API_KEY in your environment.");
+    throw new Error("System Error: API Key is missing. Please contact support.");
+  }
+  return new GoogleGenAI({ apiKey });
+};
 
 const businessResponseSchema: Schema = {
   type: Type.ARRAY,
@@ -22,7 +31,7 @@ const businessResponseSchema: Schema = {
 };
 
 export const generateBusinessIdeas = async (profile: UserProfile, language: Language): Promise<BusinessIdea[]> => {
-  const modelId = "gemini-3-pro-preview";
+  const modelId = "gemini-2.0-flash"; // Updated to a stable, fast model
 
   // Construct specific employment context
   let employmentContext = "";
@@ -77,6 +86,7 @@ export const generateBusinessIdeas = async (profile: UserProfile, language: Lang
   `;
 
   try {
+    const ai = getAiClient();
     const response = await ai.models.generateContent({
       model: modelId,
       contents: prompt,
@@ -94,12 +104,26 @@ export const generateBusinessIdeas = async (profile: UserProfile, language: Lang
     return [];
   } catch (error) {
     console.error("Gemini API Error:", error);
-    throw new Error("Failed to generate business ideas.");
+    // Return a fallback mock if AI fails, to prevent UI crash
+    if (language === 'zh') {
+       return [{
+           id: 'fallback-1',
+           title: 'API配置错误或额度不足',
+           oneLiner: '请检查您的 API KEY 设置',
+           reasoning: '系统无法连接到 AI 服务。这通常是因为 API KEY 未设置或已过期。',
+           difficultyScore: 10,
+           estimatedStartupCost: '$0',
+           potentialMonthlyRevenue: '$0',
+           tags: ['Error'],
+           recommendedPlatform: 'System'
+       }];
+    }
+    throw new Error("Failed to generate business ideas. Please check your API Key.");
   }
 };
 
 export const generateDetailedRoadmap = async (idea: BusinessIdea, profile: UserProfile, language: Language): Promise<string> => {
-  const modelId = "gemini-3-pro-preview";
+  const modelId = "gemini-2.0-flash";
 
   const introPrompt = profile.feelingLost || profile.lifeStagnant
     ? "The user feels lost or stuck. Start the roadmap with a short, powerful, empathetic paragraph acknowledging their struggle and inspiring them that THIS is their way out."
@@ -128,13 +152,14 @@ export const generateDetailedRoadmap = async (idea: BusinessIdea, profile: UserP
   `;
 
   try {
+    const ai = getAiClient();
     const response = await ai.models.generateContent({
       model: modelId,
       contents: prompt,
     });
     return response.text || "Could not generate roadmap.";
   } catch (error) {
-    return "Error generating roadmap.";
+    return "Error generating roadmap. Please check API Key.";
   }
 };
 
@@ -145,7 +170,7 @@ export const sendConsultationMessage = async (
   profile: UserProfile,
   language: Language
 ): Promise<string> => {
-  const modelId = "gemini-3-pro-preview";
+  const modelId = "gemini-2.0-flash";
   
   const closingPhrase = language === 'zh' 
     ? "您是否还有其他疑问，如果还有请告诉我，如您已经准备好要开始搞钱，那么，让我们开始征服星辰和大海吧！"
@@ -177,6 +202,7 @@ export const sendConsultationMessage = async (
   `;
 
   try {
+    const ai = getAiClient();
     const result = await ai.models.generateContent({
       model: modelId,
       contents: prompt
@@ -185,6 +211,6 @@ export const sendConsultationMessage = async (
     return result.text || "I couldn't generate a response.";
   } catch (error) {
     console.error("Chat Error", error);
-    return "Connection error.";
+    return "Connection error. Please check API Key.";
   }
 };
